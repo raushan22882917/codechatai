@@ -1,0 +1,185 @@
+{
+  "name": "codetestai",
+  "displayName": "CodeTest AI",
+  "description": "AI-powered test case generation and code assistance",
+  "version": "0.1.6",
+  "publisher": "codetestai",
+  "icon": "resources/verichat-icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Testing",
+    "Other"
+  ],
+  "keywords": [
+    "test",
+    "testing",
+    "ai",
+    "test generation",
+    "code analysis"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codetestai/codetestai"
+  },
+  "license": "MIT",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codetestai-sidebar",
+          "title": "CodeTest AI",
+          "icon": "resources/verichat-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "codetestai-sidebar": [
+        {
+          "type": "webview",
+          "id": "codetestai.testView",
+          "name": "Test Cases",
+          "icon": "resources/verichat-icon.svg"
+        },
+        {
+          "type": "webview",
+          "id": "codetestai.chatView",
+          "name": "AI Chat",
+          "icon": "resources/verichat-icon.svg"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "codetestai.generateTests",
+        "title": "Generate Tests",
+        "category": "CodeTest AI",
+        "icon": "$(beaker)"
+      },
+      {
+        "command": "codetestai.runTests",
+        "title": "Run Tests",
+        "category": "CodeTest AI",
+        "icon": "$(play)"
+      },
+      {
+        "command": "codetestai.acceptSuggestion",
+        "title": "Accept AI Suggestion",
+        "category": "CodeTest AI",
+        "icon": "$(check)"
+      },
+      {
+        "command": "codetestai.rejectSuggestion",
+        "title": "Reject AI Suggestion",
+        "category": "CodeTest AI",
+        "icon": "$(x)"
+      },
+      {
+        "command": "codetestai.showChat",
+        "title": "Show AI Chat",
+        "category": "CodeTest AI",
+        "icon": "$(comment-discussion)"
+      },
+      {
+        "command": "codetestai.debugTest",
+        "title": "Debug Test",
+        "category": "CodeTest AI",
+        "icon": "$(debug)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "codetestai.generateTests",
+        "key": "ctrl+shift+t",
+        "mac": "cmd+shift+t",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "codetestai.runTests",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "codetestai.acceptSuggestion",
+        "key": "ctrl+shift+a",
+        "mac": "cmd+shift+a",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "codetestai.rejectSuggestion",
+        "key": "ctrl+shift+x",
+        "mac": "cmd+shift+x",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "codetestai.showChat",
+        "key": "ctrl+shift+c",
+        "mac": "cmd+shift+c"
+      },
+      {
+        "command": "codetestai.debugTest",
+        "key": "ctrl+shift+d",
+        "mac": "cmd+shift+d",
+        "when": "editorTextFocus"
+      }
+    ],
+    "configuration": {
+      "title": "CodeTest AI",
+      "properties": {
+        "codetestai.groqApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API Key for Groq"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "webpack --mode production",
+    "watch": "webpack --watch --mode development",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts,tsx",
+    "test": "node ./out/test/runTest.js",
+    "build:webview": "webpack --config webview.webpack.config.js --mode production"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "20.x",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "@vscode/test-electron": "^2.3.8",
+    "autoprefixer": "^10.4.21",
+    "css-loader": "^6.8.1",
+    "eslint": "^8.56.0",
+    "glob": "^10.3.10",
+    "mocha": "^10.2.0",
+    "postcss": "^8.5.3",
+    "postcss-loader": "^7.3.3",
+    "style-loader": "^3.3.3",
+    "tailwindcss": "^3.4.17",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "axios": "^1.6.2",
+    "classnames": "^2.3.2",
+    "dotenv": "^16.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

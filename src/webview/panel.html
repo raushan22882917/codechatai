@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeTest AI</title>
+    <style>
+        :root {
+            --container-padding: 20px;
+            --input-padding-vertical: 6px;
+            --input-padding-horizontal: 4px;
+            --input-margin-vertical: 4px;
+            --input-margin-horizontal: 0;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100vh;
+            color: var(--vscode-foreground);
+            background-color: var(--vscode-editor-background);
+            font-family: var(--vscode-font-family);
+            font-size: var(--vscode-font-size);
+            line-height: 1.6;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        .container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: var(--container-padding);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--vscode-panel-border);
+        }
+
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: var(--vscode-foreground);
+            font-size: 14px;
+            position: relative;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .tab.active {
+            opacity: 1;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--vscode-focusBorder);
+        }
+
+        .tab:hover {
+            opacity: 1;
+        }
+
+        .tab-content {
+            display: none;
+            height: calc(100% - 60px);
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            padding: 8px;
+            margin-bottom: 16px;
+            border-radius: 4px;
+            background-color: var(--vscode-editorWidget-background);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .status-icon.loading {
+            border: 2px solid var(--vscode-focusBorder);
+            border-right-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .auto-detect {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            margin-bottom: 16px;
+            background-color: var(--vscode-editorWidget-background);
+            border-radius: 4px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--vscode-input-background);
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: var(--vscode-button-foreground);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--vscode-button-background);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .test-cases {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .test-case {
+            background-color: var(--vscode-editorWidget-background);
+            border-radius: 4px;
+            padding: 12px;
+        }
+
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .test-title {
+            font-weight: 500;
+            color: var(--vscode-foreground);
+        }
+
+        .test-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .test-status.pending {
+            background-color: var(--vscode-statusBarItem-warningBackground);
+            color: var(--vscode-statusBarItem-warningForeground);
+        }
+
+        .test-status.passed {
+            background-color: var(--vscode-testing-iconPassed);
+            color: var(--vscode-statusBarItem-remoteForeground);
+        }
+
+        .test-status.failed {
+            background-color: var(--vscode-testing-iconFailed);
+            color: var(--vscode-statusBarItem-remoteForeground);
+        }
+
+        .test-code {
+            background-color: var(--vscode-editor-background);
+            padding: 12px;
+            border-radius: 4px;
+            font-family: var(--vscode-editor-font-family);
+            font-size: var(--vscode-editor-font-size);
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .chat {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px;
+            border-radius: 12px;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background-color: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+        }
+
+        .message.assistant {
+            align-self: flex-start;
+            background-color: var(--vscode-editorWidget-background);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 8px;
+            padding: 16px;
+            background-color: var(--vscode-editorWidget-background);
+            border-radius: 4px;
+        }
+
+        textarea {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid var(--vscode-input-border);
+            border-radius: 4px;
+            background-color: var(--vscode-input-background);
+            color: var(--vscode-input-foreground);
+            font-family: var(--vscode-font-family);
+            font-size: var(--vscode-font-size);
+            resize: none;
+            min-height: 38px;
+            max-height: 200px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .file-info {
+            font-size: 12px;
+            color: var(--vscode-descriptionForeground);
+            margin-bottom: 8px;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--vscode-scrollbarSlider-background);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--vscode-scrollbarSlider-hoverBackground);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--vscode-scrollbarSlider-activeBackground);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" data-tab="test-cases">Test Cases</button>
+            <button class="tab" data-tab="chat">AI Chat</button>
+        </div>
+
+        <div id="test-cases" class="tab-content active">
+            <div class="status-bar">
+                <div class="status-icon"></div>
+                <span id="status-message">Ready to generate tests</span>
+            </div>
+
+            <div class="file-info">
+                Current file: <span id="current-file">No file selected</span>
+            </div>
+
+            <div class="auto-detect">
+                <label class="switch">
+                    <input type="checkbox" id="auto-detect">
+                    <span class="slider"></span>
+                </label>
+                <span>Auto-detect code changes</span>
+            </div>
+
+            <div class="actions">
+                <button id="generate-tests">Generate Tests</button>
+                <button id="run-tests">Run All Tests</button>
+            </div>
+
+            <div class="test-cases" id="test-list"></div>
+        </div>
+
+        <div id="chat" class="tab-content">
+            <div class="chat">
+                <div class="messages" id="messages"></div>
+                <div class="input-container">
+                    <textarea id="message-input" placeholder="Type your message..." rows="1"></textarea>
+                    <button id="send-message">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const vscode = acquireVsCodeApi();
+        let currentTab = 'test-cases';
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelector('.tab.active').classList.remove('active');
+                document.querySelector('.tab-content.active').classList.remove('active');
+                tab.classList.add('active');
+                const tabId = tab.dataset.tab;
+                document.getElementById(tabId).classList.add('active');
+                currentTab = tabId;
+            });
+        });
+
+        // Auto-detect toggle
+        const autoDetectToggle = document.getElementById('auto-detect');
+        autoDetectToggle.addEventListener('change', () => {
+            vscode.postMessage({
+                command: 'toggleAutoDetect',
+                enabled: autoDetectToggle.checked
+            });
+        });
+
+        // Generate tests button
+        document.getElementById('generate-tests').addEventListener('click', () => {
+            vscode.postMessage({ command: 'generateTests' });
+            setStatus('Generating test cases...', true);
+        });
+
+        // Run tests button
+        document.getElementById('run-tests').addEventListener('click', () => {
+            vscode.postMessage({ command: 'runAllTests' });
+            setStatus('Running tests...', true);
+        });
+
+        // Chat input handling
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-message');
+
+        messageInput.addEventListener('input', () => {
+            messageInput.style.height = 'auto';
+            messageInput.style.height = messageInput.scrollHeight + 'px';
+        });
+
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        sendButton.addEventListener('click', sendMessage);
+
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            addMessage(text, true);
+            vscode.postMessage({
+                command: 'sendMessage',
+                text: text
+            });
+
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+        }
+
+        function addMessage(text, isUser = false) {
+            const messages = document.getElementById('messages');
+            const message = document.createElement('div');
+            message.className = `message ${isUser ? 'user' : 'assistant'}`;
+            message.textContent = text;
+            messages.appendChild(message);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function setStatus(message, loading = false) {
+            const statusIcon = document.querySelector('.status-icon');
+            const statusMessage = document.getElementById('status-message');
+
+            statusIcon.className = 'status-icon' + (loading ? ' loading' : '');
+            statusMessage.textContent = message;
+        }
+
+        function updateTestCases(tests) {
+            const testList = document.getElementById('test-list');
+            testList.innerHTML = '';
+
+            tests.forEach((test, index) => {
+                const testCase = document.createElement('div');
+                testCase.className = 'test-case';
+                testCase.innerHTML = `
+                    <div class="test-header">
+                        <div class="test-title">Test Case ${index + 1}</div>
+                        <div class="test-status ${test.status}">${test.status}</div>
+                    </div>
+                    <div class="test-code">${test.code}</div>
+                    ${test.error ? `<div class="test-error">${test.error}</div>` : ''}
+                `;
+                testList.appendChild(testCase);
+            });
+
+            setStatus('Test cases updated');
+        }
+
+        // Handle messages from the extension
+        window.addEventListener('message', event => {
+            const message = event.data;
+
+            switch (message.command) {
+                case 'updateTests':
+                    updateTestCases(message.tests);
+                    break;
+
+                case 'addMessage':
+                    addMessage(message.text, message.isUser);
+                    break;
+
+                case 'updateStatus':
+                    setStatus(message.message);
+                    break;
+
+                case 'updateFile':
+                    document.getElementById('current-file').textContent = 
+                        message.filePath || 'No file selected';
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>
