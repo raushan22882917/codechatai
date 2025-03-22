@@ -13,6 +13,7 @@ Our team consists of:
 - **Shadab**
 
 
+
 ### Introduction
 The AI-Powered Peer Programming Assistant is designed to provide real-time coding assistance by generating code, debugging errors, optimizing performance, and writing test cases. This report focuses on the assistant's UI design, user flows, database schema, and system architecture, ensuring a seamless user experience and efficient backend management.
 
@@ -38,6 +39,9 @@ Our primary users include:
 - **Learning Aid:** Acts as a tutor for those new to programming.
 
 ## Differentiating Features
+
+![Chat Mode](chatMode.png)
+![Test Mode](testMode.png)
 
 ### 🧪 AI-Powered Test Generation
 - Automatically generates up to 10 test cases for your code
