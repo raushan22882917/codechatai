@@ -157,6 +157,10 @@ Using the **MoSCoW** method:
 - **Won't Have (for now):** AI voice coding assistance.
 
 ### User Flow and Interaction Design
+
+![User Flow diagram](userFlow.png)
+
+
 #### 3.1 Code Writing & AI Assistance
 - User writes code in the editor.
 - AI provides suggestions, error detection, and auto-completions.
@@ -175,7 +179,7 @@ Using the **MoSCoW** method:
 
 ## System Design and Architecture
 
-![Chat Mode](systemDesign.png)
+![System Design Diagram](systemDesign.png)
 
 ### System Components (Tech Stack):
 - **Frontend:** React.js for an interactive UI.
