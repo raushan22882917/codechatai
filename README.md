@@ -174,11 +174,14 @@ Using the **MoSCoW** method:
 - The user applies fixes manually or accepts AI-generated solutions.
 
 ## System Design and Architecture
+
+![Chat Mode](systemDesign.png)
+
 ### System Components (Tech Stack):
 - **Frontend:** React.js for an interactive UI.
 - **Backend:** Node.js with Express for handling requests and AI interactions.
 - **AI Engine:** Python-based LLM & NLP models for processing code.
-- **Database:** MongoDB for storing user interactions and test cases.
+- **Database:** MongoDB for storing user interactions and test cases. (We will be using it)
 - **Authentication:** OAuth/Firebase Auth (Planned feature).
 
 ### Data Flow
