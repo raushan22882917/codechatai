@@ -1,6 +1,8 @@
 # GenTestx 
 
 > An intelligent VS Code extension that revolutionizes development with AI-powered test generation, code assistance, and debugging capabilities.
+>
+> Report url:(https://docs.google.com/document/d/19SeW2uHv5ePcXSPM7heLZte7jqA-UjFcb_oJefP0Quo/edit?tab=t.d9j45ur6595b)
 
 [![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue)](https://marketplace.visualstudio.com/items?itemName=GenTestxai.GenTestxai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
