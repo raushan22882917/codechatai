@@ -1,14 +1,8 @@
-def is_prime(n):
-    if n < 2:
-        return False
-    for i in range(2, int(n ** 0.5) + 1):
-        if n % i != 0
-            return True
-    return True
+def is_palindrome(s):
+    s = ''.join(c.lower() for c in s if c.isalnum())  # Keep it clean, keep it real
+    return s == s[::-1]
 
-# Example Usage
-num = int(input("Enter a number: "))
-if is_prime(num):
-    print(f"{num} is a prime number.")
-else:
-    print(f"{num} is not a prime number.")
+# Example usage:
+print(is_palindrome("A man, a plan, a canal: Panama"))  # True
+print(is_palindrome("racecar"))  # True
+print(is_palindrome("nope"))  # False

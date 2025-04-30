@@ -1,183 +1,178 @@
 {
-  "name": "codetestai",
-  "displayName": "CodeTest AI",
-  "description": "AI-powered test case generation and code assistance",
-  "version": "0.1.6",
-  "publisher": "codetestai",
-  "icon": "resources/verichat-icon.png",
+  "name": "gentestx",
+  "displayName": "GenTestX",
+  "description": "VS Code extension for generating test cases using Groq AI",
+  "version": "2.8.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/22882917/gentestx"
+  },
+  "publisher": "gentestx",
+  "icon": "resources/icon.jpg",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.99.0"
   },
   "categories": [
     "Testing",
     "Other"
   ],
-  "keywords": [
-    "test",
-    "testing",
-    "ai",
-    "test generation",
-    "code analysis"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/codetestai/codetestai"
-  },
-  "license": "MIT",
   "activationEvents": [
     "onStartupFinished"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "codetestai-sidebar",
-          "title": "CodeTest AI",
-          "icon": "resources/verichat-icon.svg"
+          "id": "gentestx-sidebar",
+          "title": "GenTestX",
+          "icon": "resources/icon.svg"
         }
       ]
     },
     "views": {
-      "codetestai-sidebar": [
+      "gentestx-sidebar": [
         {
           "type": "webview",
-          "id": "codetestai.testView",
-          "name": "Test Cases",
-          "icon": "resources/verichat-icon.svg"
-        },
-        {
-          "type": "webview",
-          "id": "codetestai.chatView",
-          "name": "AI Chat",
-          "icon": "resources/verichat-icon.svg"
+          "id": "gentestx.analysisView",
+          "name": "Test Generator"
         }
       ]
     },
     "commands": [
       {
-        "command": "codetestai.generateTests",
-        "title": "Generate Tests",
-        "category": "CodeTest AI",
-        "icon": "$(beaker)"
+        "command": "gentestx.analyzeCode",
+        "title": "GenTestX: Analyze Code and Generate Tests"
       },
       {
-        "command": "codetestai.runTests",
-        "title": "Run Tests",
-        "category": "CodeTest AI",
-        "icon": "$(play)"
+        "command": "gentestx.analyzeLine",
+        "title": "GenTestX: Analyze Current Line"
       },
       {
-        "command": "codetestai.acceptSuggestion",
-        "title": "Accept AI Suggestion",
-        "category": "CodeTest AI",
-        "icon": "$(check)"
+        "command": "gentestx.analyzeFile",
+        "title": "GenTestX: Analyze Entire File"
       },
       {
-        "command": "codetestai.rejectSuggestion",
-        "title": "Reject AI Suggestion",
-        "category": "CodeTest AI",
-        "icon": "$(x)"
+        "command": "gentestx.selectFile",
+        "title": "GenTestX: Select and Analyze File"
       },
       {
-        "command": "codetestai.showChat",
-        "title": "Show AI Chat",
-        "category": "CodeTest AI",
-        "icon": "$(comment-discussion)"
+        "command": "gentestx.fixCode",
+        "title": "GenTestX: Fix Code Issue"
       },
       {
-        "command": "codetestai.debugTest",
-        "title": "Debug Test",
-        "category": "CodeTest AI",
-        "icon": "$(debug)"
+        "command": "gentestx.acceptFix",
+        "title": "GenTestX: Accept Fix Suggestion"
+      },
+      {
+        "command": "gentestx.rejectFix",
+        "title": "GenTestX: Reject Fix Suggestion"
+      },
+      {
+        "command": "gentestx.showFixSuggestion",
+        "title": "GenTestX: Show Fix Suggestion"
+      },
+      {
+        "command": "gentestx.toggleAutoAnalysis",
+        "title": "GenTestX: Toggle Automatic Code Analysis"
+      },
+      {
+        "command": "gentestx.generateCode",
+        "title": "GenTestX: Generate Code and Create File"
       }
     ],
     "keybindings": [
       {
-        "command": "codetestai.generateTests",
-        "key": "ctrl+shift+t",
-        "mac": "cmd+shift+t",
+        "command": "gentestx.analyzeLine",
+        "key": "ctrl+shift+l",
+        "mac": "cmd+shift+l",
         "when": "editorTextFocus"
       },
       {
-        "command": "codetestai.runTests",
-        "key": "ctrl+shift+r",
-        "mac": "cmd+shift+r",
+        "command": "gentestx.analyzeFile",
+        "key": "ctrl+shift+f",
+        "mac": "cmd+shift+f",
         "when": "editorTextFocus"
       },
       {
-        "command": "codetestai.acceptSuggestion",
+        "command": "gentestx.selectFile",
+        "key": "ctrl+shift+o",
+        "mac": "cmd+shift+o"
+      },
+      {
+        "command": "gentestx.analyzeCode",
         "key": "ctrl+shift+a",
         "mac": "cmd+shift+a",
-        "when": "editorTextFocus"
-      },
-      {
-        "command": "codetestai.rejectSuggestion",
-        "key": "ctrl+shift+x",
-        "mac": "cmd+shift+x",
-        "when": "editorTextFocus"
-      },
-      {
-        "command": "codetestai.showChat",
-        "key": "ctrl+shift+c",
-        "mac": "cmd+shift+c"
-      },
-      {
-        "command": "codetestai.debugTest",
-        "key": "ctrl+shift+d",
-        "mac": "cmd+shift+d",
         "when": "editorTextFocus"
       }
     ],
     "configuration": {
-      "title": "CodeTest AI",
+      "title": "GenTestX",
       "properties": {
-        "codetestai.groqApiKey": {
+        "gentestx.groqApiKey": {
           "type": "string",
           "default": "",
-          "description": "API Key for Groq"
+          "description": "API key for Groq AI. You can get one at https://console.groq.com/",
+          "markdownDescription": "API key for Groq AI. You can get one at [https://console.groq.com/](https://console.groq.com/)"
+        },
+        "gentestx.defaultMode": {
+          "type": "string",
+          "enum": [
+            "chat",
+            "gentestx"
+          ],
+          "default": "chat",
+          "description": "Default mode for the GenTestX extension (chat or gentestx AI)"
+        },
+        "gentestx.defaultLanguage": {
+          "type": "string",
+          "enum": [
+            "javascript",
+            "typescript",
+            "python",
+            "java",
+            "csharp",
+            "cpp",
+            "go",
+            "rust",
+            "php",
+            "ruby"
+          ],
+          "default": "javascript",
+          "description": "Default programming language for code analysis"
+        },
+        "gentestx.autoAnalysis": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically analyze code as you type and show fix suggestions"
         }
       }
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "webpack --mode production",
-    "watch": "webpack --watch --mode development",
-    "package": "webpack --mode production --devtool hidden-source-map",
-    "pretest": "npm run compile && npm run lint",
+    "vscode:prepublish": "npm run build",
+    "build": "ts-node ./scripts/build.ts",
+    "watch": "ts-node ./scripts/build.ts --watch",
     "lint": "eslint src --ext ts,tsx",
-    "test": "node ./out/test/runTest.js",
-    "build:webview": "webpack --config webview.webpack.config.js --mode production"
+    "package": "vsce package",
+    "publish": "vsce publish"
   },
   "devDependencies": {
-    "@types/glob": "^8.1.0",
-    "@types/mocha": "^10.0.6",
-    "@types/node": "20.x",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
-    "@types/vscode": "^1.85.0",
-    "@typescript-eslint/eslint-plugin": "^6.15.0",
-    "@typescript-eslint/parser": "^6.15.0",
-    "@vscode/test-electron": "^2.3.8",
-    "autoprefixer": "^10.4.21",
-    "css-loader": "^6.8.1",
-    "eslint": "^8.56.0",
-    "glob": "^10.3.10",
-    "mocha": "^10.2.0",
-    "postcss": "^8.5.3",
-    "postcss-loader": "^7.3.3",
-    "style-loader": "^3.3.3",
-    "tailwindcss": "^3.4.17",
-    "ts-loader": "^9.5.1",
-    "typescript": "^5.3.3",
-    "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "@types/node": "^18.x",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@types/vscode": "^1.99.1",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vscode/vsce": "^3.3.2",
+    "esbuild": "^0.18.11",
+    "eslint": "^8.45.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6",
+    "vsce": "^2.15.0"
   },
   "dependencies": {
-    "@heroicons/react": "^2.2.0",
-    "axios": "^1.6.2",
-    "classnames": "^2.3.2",
+    "axios": "^1.6.0",
     "dotenv": "^16.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

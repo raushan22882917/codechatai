@@ -2,7 +2,7 @@
 
 An AI-powered VS Code extension for intelligent test case generation and code assistance.
 
-![CodeTest AI](resources/verichat-icon.png)
+![CodeTest AI](resources/icon.jpg)
 see our extension:(https://marketplace.visualstudio.com/items?itemName=codetestai.codetestai)
 
 
